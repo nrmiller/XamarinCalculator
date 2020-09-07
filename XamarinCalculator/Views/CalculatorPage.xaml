@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="XamarinCalculator.Views.CalculatorPage"
+    xmlns:view="clr-namespace:XamarinCalculator.Views"
+    xmlns:model="clr-namespace:XamarinCalculator.Models"
+    Title="Calculator">
+    <ContentPage.Resources>
+        <OnPlatform x:Key="GridPadding" x:TypeArguments="Thickness">
+            <On Platform="iOS" Value="10,0,10,50" />
+            <On Platform="Android" Value="10,0,10,10" />
+        </OnPlatform>
+
+        <Style x:Key="BaseButton" TargetType="Button">
+            <Setter Property="FontSize" Value="30"/>
+            <Setter Property="BackgroundColor" Value="AliceBlue"/>
+        </Style>
+        <Style TargetType="Button" BasedOn="{StaticResource BaseButton}"/>
+        <Style x:Key="NumberStyle" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+            <Setter Property="Command" Value="{Binding Input}"/>
+        </Style>
+        <Style x:Key="OperatorStyle" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+            <Setter Property="BackgroundColor" Value="CornflowerBlue"/>
+            <Setter Property="TextColor" Value="White"/>
+        </Style>
+
+        <view:ActiveOperatorConverter x:Key="ActiveOperatorConverter"/>
+
+    </ContentPage.Resources>
+    <StackLayout>
+        <StackLayout VerticalOptions="FillAndExpand">
+            <Label Text="{Binding WorkingValue}" FlowDirection="RightToLeft" HorizontalOptions="Fill" VerticalOptions="Start" HeightRequest="160" TextColor="CornflowerBlue" FontSize="30" VerticalTextAlignment="Center" Padding="10" BackgroundColor="AliceBlue"/>
+            <Label Text="{Binding ActiveOperator, Converter={StaticResource ActiveOperatorConverter}}" FlowDirection="RightToLeft" HorizontalOptions="Fill" VerticalOptions="StartAndExpand" FontSize="30" VerticalTextAlignment="Start" Padding="10" />
+            <Label Text="{Binding Result}" FlowDirection="RightToLeft" HorizontalOptions="Fill" VerticalOptions="End" HeightRequest="80" FontSize="30" VerticalTextAlignment="Center" Padding="10"/>
+        </StackLayout>
+        <Grid VerticalOptions="End" Padding="{StaticResource GridPadding}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Button Grid.Column="0" Grid.Row="0" Text="C" TextColor="Red" Command="{Binding Clear}"/>
+            <Button Grid.Column="2" Grid.Row="0" Text="←" TextColor="Red" Style="{StaticResource NumberStyle}" CommandParameter="{x:Static model:Key.Backspace}"/>          
+            <Button Grid.Column="3" Grid.Row="0" Text="÷" Style="{StaticResource OperatorStyle}" Command="{Binding Divide}"/>
+            <Button Grid.Column="0" Grid.Row="1" Text="7" Style="{StaticResource NumberStyle}" CommandParameter="{x:Static model:Key.Num7}"/>
+            <Button Grid.Column="1" Grid.Row="1" Text="8" Style="{StaticResource NumberStyle}" CommandParameter="{x:Static model:Key.Num8}"/>
+            <Button Grid.Column="2" Grid.Row="1" Text="9" Style="{StaticResource NumberStyle}" CommandParameter="{x:Static model:Key.Num9}"/>
+            <Button Grid.Column="3" Grid.Row="1" Text="×" Style="{StaticResource OperatorStyle}" Command="{Binding Multiply}"/>
+            <Button Grid.Column="0" Grid.Row="2" Text="4" Style="{StaticResource NumberStyle}" CommandParameter="{x:Static model:Key.Num4}"/>
+            <Button Grid.Column="1" Grid.Row="2" Text="5" Style="{StaticResource NumberStyle}" CommandParameter="{x:Static model:Key.Num5}"/>
+            <Button Grid.Column="2" Grid.Row="2" Text="6" Style="{StaticResource NumberStyle}" CommandParameter="{x:Static model:Key.Num6}"/>
+            <Button Grid.Column="3" Grid.Row="2" Text="-" Style="{StaticResource OperatorStyle}" Command="{Binding Subtract}"/>
+            <Button Grid.Column="0" Grid.Row="3" Text="1" Style="{StaticResource NumberStyle}" CommandParameter="{x:Static model:Key.Num1}"/>
+            <Button Grid.Column="1" Grid.Row="3" Text="2" Style="{StaticResource NumberStyle}" CommandParameter="{x:Static model:Key.Num2}"/>
+            <Button Grid.Column="2" Grid.Row="3" Text="3" Style="{StaticResource NumberStyle}" CommandParameter="{x:Static model:Key.Num3}"/>
+            <Button Grid.Column="3" Grid.Row="3" Text="+" Style="{StaticResource OperatorStyle}" Command="{Binding Add}"/>
+            <Button Grid.Column="0" Grid.Row="4" Text="+/-" Command="{Binding Negate}"/>
+            <Button Grid.Column="1" Grid.Row="4" Text="0" Style="{StaticResource NumberStyle}" CommandParameter="{x:Static model:Key.Num0}"/>
+            <Button Grid.Column="2" Grid.Row="4" Text="." Style="{StaticResource NumberStyle}" CommandParameter="{x:Static model:Key.Decimal}"/>
+            <Button Grid.Column="3" Grid.Row="4" Text="=" Style="{StaticResource OperatorStyle}" Command="{Binding Evaluate}"/>
+        </Grid>
+    </StackLayout>
+</ContentPage>
