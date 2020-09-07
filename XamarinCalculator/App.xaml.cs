@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using XamarinCalculator.Services;
+using XamarinCalculator.ViewModels;
+using XamarinCalculator.Views;
 
 namespace XamarinCalculator
 {
@@ -10,19 +14,12 @@ namespace XamarinCalculator
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
-        }
+            var page = new CalculatorPage()
+            {
+                BindingContext = new CalculatorViewModel(new EditorService())
+            };
 
-        protected override void OnStart()
-        {
-        }
-
-        protected override void OnSleep()
-        {
-        }
-
-        protected override void OnResume()
-        {
+            MainPage = new NavigationPage(page);
         }
     }
 }
