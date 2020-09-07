@@ -887,7 +887,7 @@ namespace XamarinCalculator.Tests.ViewModels
         }
 
         [Test]
-        public void Divide_WhenResultExceeds21CharsFromDivide_ResultIsTruncated()
+        public void Divide_WhenResultExceeds21CharsFromDecimal_ResultIsTruncated()
         {
             subject.WorkingValue = "9";
             subject.Result = "1";
@@ -1084,7 +1084,7 @@ namespace XamarinCalculator.Tests.ViewModels
         }
 
         [Test]
-        public void Evaluate_WhenResultExceeds21CharsFromDivide_ResultIsTruncated()
+        public void Evaluate_WhenResultExceeds21CharsFromDecimal_ResultIsTruncated()
         {
             subject.WorkingValue = "9";
             subject.Result = "1";
@@ -1135,5 +1135,57 @@ namespace XamarinCalculator.Tests.ViewModels
         }
 
         #endregion
+
+        [Test]
+        public void ShouldTruncate_ReturnsCorrectValue()
+        {
+            // Decimal strings that exceed 21 characters need truncating.
+            Assert.True(subject.ShouldTruncate("1.00000000000000000001"));
+            Assert.True(subject.ShouldTruncate("10.0000000000000000001"));
+            Assert.True(subject.ShouldTruncate("100.000000000000000001"));
+            Assert.True(subject.ShouldTruncate("1000.00000000000000001"));
+            Assert.True(subject.ShouldTruncate("10000.0000000000000001"));
+            Assert.True(subject.ShouldTruncate("100000.000000000000001"));
+            Assert.True(subject.ShouldTruncate("1000000.00000000000001"));
+            Assert.True(subject.ShouldTruncate("10000000.0000000000001"));
+            Assert.True(subject.ShouldTruncate("100000000.000000000001"));
+            Assert.True(subject.ShouldTruncate("1000000000.00000000001"));
+            Assert.True(subject.ShouldTruncate("10000000000.0000000001"));
+            Assert.True(subject.ShouldTruncate("100000000000.000000001"));
+            Assert.True(subject.ShouldTruncate("1000000000000.00000001"));
+            Assert.True(subject.ShouldTruncate("10000000000000.0000001"));
+            Assert.True(subject.ShouldTruncate("100000000000000.000001"));
+            Assert.True(subject.ShouldTruncate("1000000000000000.00001"));
+            Assert.True(subject.ShouldTruncate("10000000000000000.0001"));
+            Assert.True(subject.ShouldTruncate("100000000000000000.001"));
+            Assert.True(subject.ShouldTruncate("1000000000000000000.01"));
+            Assert.True(subject.ShouldTruncate("10000000000000000000.1"));
+            Assert.True(subject.ShouldTruncate("100000000000000000000.1"));
+            Assert.True(subject.ShouldTruncate("100000000000000000001."));
+
+            Assert.False(subject.ShouldTruncate("1.0000000000000000001"));
+            Assert.False(subject.ShouldTruncate("10.000000000000000001"));
+            Assert.False(subject.ShouldTruncate("100.00000000000000001"));
+            Assert.False(subject.ShouldTruncate("1000.0000000000000001"));
+            Assert.False(subject.ShouldTruncate("10000.000000000000001"));
+            Assert.False(subject.ShouldTruncate("100000.00000000000001"));
+            Assert.False(subject.ShouldTruncate("1000000.0000000000001"));
+            Assert.False(subject.ShouldTruncate("10000000.000000000001"));
+            Assert.False(subject.ShouldTruncate("100000000.00000000001"));
+            Assert.False(subject.ShouldTruncate("1000000000.0000000001"));
+            Assert.False(subject.ShouldTruncate("10000000000.000000001"));
+            Assert.False(subject.ShouldTruncate("100000000000.00000001"));
+            Assert.False(subject.ShouldTruncate("1000000000000.0000001"));
+            Assert.False(subject.ShouldTruncate("10000000000000.000001"));
+            Assert.False(subject.ShouldTruncate("100000000000000.00001"));
+            Assert.False(subject.ShouldTruncate("1000000000000000.0001"));
+            Assert.False(subject.ShouldTruncate("10000000000000000.001"));
+            Assert.False(subject.ShouldTruncate("100000000000000000.01"));
+            Assert.False(subject.ShouldTruncate("1000000000000000000.1"));
+
+            Assert.False(subject.ShouldTruncate("1000000000000000000001"));
+            Assert.False(subject.ShouldTruncate("1000000000000000000001.1"));
+            Assert.False(subject.ShouldTruncate("1000000000000000000001.01"));
+        }
     }
 }

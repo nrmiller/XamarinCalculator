@@ -56,8 +56,9 @@ namespace XamarinCalculator.ViewModels
                                     ActiveOperator = null;
                                     calculatorService.Clear();
                                 }
-                                else if (ActiveOperator == Operator.Divide)
+                                else if (ShouldTruncate(Result))
                                 {
+                                    // Truncate when less than 1.
                                     WorkingValue = string.Empty;
                                     Result = Result.Substring(0, Constants.MaxCharacters);
                                     ActiveOperator = null;
@@ -116,8 +117,9 @@ namespace XamarinCalculator.ViewModels
                                 ActiveOperator = op;
                                 calculatorService.Clear();
                             }
-                            else if (ActiveOperator == Operator.Divide)
+                            else if (ShouldTruncate(Result))
                             {
+                                // Truncate when less than 1.
                                 WorkingValue = string.Empty;
                                 Result = Result.Substring(0, Constants.MaxCharacters);
                                 ActiveOperator = op;
@@ -168,6 +170,38 @@ namespace XamarinCalculator.ViewModels
             };
         }
 
+        private async void ProcessInput(Key key)
+        {
+            WorkingValue = await Task.Run<string>(() => calculatorService.ProcessKey(key));
+            Negate.ChangeCanExecute();
+        }
+
+        public bool ShouldTruncate(string result)
+        {
+            if (result.Length <= Constants.MaxCharacters)
+            {
+                return false;
+            }
+            else if (!result.Contains("."))
+            {
+                return false; // No decimal means it should be an "Error".
+            }
+            else
+            {
+                // Contains a decimal and > 21 chars.
+                int charsBeforeDecimal = result.IndexOf(".");
+                if (charsBeforeDecimal > Constants.MaxCharacters)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true; // Number can be truncated.
+                }
+            }
+        }
+
+        public Command Clear { get; }
         public Command Input { get; }
         public Command Add { get; }
         public Command Subtract { get; }
@@ -217,14 +251,6 @@ namespace XamarinCalculator.ViewModels
                 }
             }
         }
-
-        private async void ProcessInput(Key key)
-        {
-            WorkingValue = await Task.Run<string>(() => calculatorService.ProcessKey(key));
-            Negate.ChangeCanExecute();
-        }
-
-        public Command Clear { get; }
 
         #region INotifyPropertyChanged
 
